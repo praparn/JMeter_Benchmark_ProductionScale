@@ -1,0 +1,17 @@
+Lab Setup for Jmeter with Wordpress:
+1. docker pull labdocker/wordpress:latest
+2. docker pull labdocker/mysql:latest
+3. docker pull phpmyadmin/phpmyadmin:latest
+4. Winscp Path "Mysql", "wordpress_obj" from source to /home/docker
+5. docker run -dt --name mysql_wordpress -p 3306:3306 \
+    -v /home/docker/mysql:/var/lib/mysql:rw \
+    -e MYSQL_ROOT_PASSWORD=password \
+    labdocker/mysql:latest
+
+6. docker run -dt --name wordpress -p 80:80 \
+    -v /home/docker/wordpress_obj/wp-content:/var/www/html/wp-content:rw \
+    -e WORDPRESS_DB_PASSWORD=password \
+    --link mysql_wordpress:mysql labdocker/wordpress:latest
+
+7. docker run -dt --name phpmyadmin_wordpress \
+    --link mysql_wordpress:db -p 8080:80 phpmyadmin/phpmyadmin
